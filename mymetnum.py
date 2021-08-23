@@ -264,8 +264,10 @@ def numedo_euler_explicit(expr, y_0, intervalo, h):
         - 'h': longitud de los subintervalos del metodo.
 
     Output:
-        - jCORREGIR!!!'solucion': [lista] Formada por las tuplas (x_i, y_i) correspondiente
-                      a los puntos de evaluación x_i y las aproximaciones y_i.
+        - x: [lista]  Correspondiente a los puntos de evaluación x_i.
+
+        - y: [lista] Correspondiente a las aproximaciones y_i en los puntos de
+                     evaluacion.
 
     """
 
