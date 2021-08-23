@@ -247,7 +247,7 @@ def susreg(A, b):
 #
 # El nombre de los métodos empezará por numedo (numerico edo)
 
-def numedo_euler_explicit(expr, intervalo, h):
+def numedo_euler_explicit(expr, y_0, intervalo, h):
     """
 
     Metodo monopaso 'Euler explícito'
@@ -257,17 +257,26 @@ def numedo_euler_explicit(expr, intervalo, h):
     Input:
         - 'expr': [string] Introducir la edo f(y, t).
 
+        - 'y_0': Condición inicial conocida en intervalo[0]
+
         - 'intervalo': [tupla] (a, b) donde 'a' inicio del intervalo y 'b' final.
 
         - 'h': longitud de los subintervalos del metodo.
 
     Output:
-        - 'solucion': [lista] Formada por las tuplas (x_i, y_i) correspondiente
+        - jCORREGIR!!!'solucion': [lista] Formada por las tuplas (x_i, y_i) correspondiente
                       a los puntos de evaluación x_i y las aproximaciones y_i.
 
     """
 
-    expr = sympy.sympify(expr)
 
     # Creamos un vector con los puntos según la distancia introducida.
     x = np.arange(intervalo[0], intervalo[1], h)
+
+    y = x.astype(float)
+    y[0] = y_0
+
+    for i in range(0, len(x)-1):
+        y[i+1] = y[i] + h*expr(y[i], x[i])
+
+    return x, y
