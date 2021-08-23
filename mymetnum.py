@@ -2,6 +2,8 @@
 # python a través del trabajo con arrays gracias a la librería NumPy.
 
 import numpy as np
+from matplotlib import pyplot as plot
+import sympy
 
 # Funciones propias de la librería para automatizar la comunicación de problemas
 # y otros issues:
@@ -237,3 +239,44 @@ def susreg(A, b):
 
 
     return sol
+
+
+###############################
+# METODOS NUMERICOS PARA EDOs #
+###############################
+#
+# El nombre de los métodos empezará por numedo (numerico edo)
+
+def numedo_euler_explicit(expr, y_0, intervalo, h):
+    """
+
+    Metodo monopaso 'Euler explícito'
+
+    Se considera la EDO en forma explícita $ y'(t) = f(y, t) $
+
+    Input:
+        - 'expr': [string] Introducir la edo f(y, t).
+
+        - 'y_0': Condición inicial conocida en intervalo[0]
+
+        - 'intervalo': [tupla] (a, b) donde 'a' inicio del intervalo y 'b' final.
+
+        - 'h': longitud de los subintervalos del metodo.
+
+    Output:
+        - jCORREGIR!!!'solucion': [lista] Formada por las tuplas (x_i, y_i) correspondiente
+                      a los puntos de evaluación x_i y las aproximaciones y_i.
+
+    """
+
+
+    # Creamos un vector con los puntos según la distancia introducida.
+    x = np.arange(intervalo[0], intervalo[1], h)
+
+    y = x.astype(float)
+    y[0] = y_0
+
+    for i in range(0, len(x)-1):
+        y[i+1] = y[i] + h*expr(y[i], x[i])
+
+    return x, y
