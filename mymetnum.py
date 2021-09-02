@@ -241,6 +241,95 @@ def susreg(A, b):
     return sol
 
 
+#######################################
+# HERRAMIENTAS PARA METODOS NUMERICOS #
+#######################################
+
+# Queremos una funcion que nos devuelva un array con el error entre unos valores
+# asociados a un conjunto de puntos y una función evaluada en los mismos puntos.
+def my_error_valores_vs_funcion(puntos, funcion, valores):
+    """
+
+    Error entre vector de valores y vector de evaluaciones de una funcion.
+
+    Input:
+        - Puntos: [np.array] array (vector) con los puntos donde evaluar.
+
+        - funcion: [funcion] funcion de python con la expresion a evaluar.
+
+        - valores: [np.array] array (vector) con los valores respecto a los que
+                              calcular el error.
+
+    Output:
+        - errores: [np.array] array (vector) con los errores puntuales.
+    """
+
+    evaluaciones = funcion(puntos)
+
+    errores = np.abs(valores - evaluaciones)
+
+    return errores
+
+
+
+
+###################################
+# METODOS NUMERICOS INTERPOLACION #
+###################################
+#
+# El nombre de los métodos empezará por numint (numerico interpolacion)
+
+# LAGRANGE #
+def diferencias_divididas_lagrange(x, v):
+    """ Cálculo de las diferencias divididas para el método de interpolación de Lagrange. """
+    
+    n = len(x)
+    
+    # Matriu de zeros per treballar les diferencies dividides.
+    mat_difdiv = np.zeros([n, n])
+    
+    # Substituim la primera columna pels valors donats com argument.
+    mat_difdiv[:,0] = v
+    
+    # Mitjançant la fòrmula per a les diferències dividides, calculem la resta de la matriu
+    for j in range(1,n):
+        
+        for i in range(j,n):
+            
+            mat_difdiv[i,j] = (mat_difdiv[i, j-1] - mat_difdiv[i-1, j-1])/(x[i]-x[i-j])
+        
+    vector_diferencias = np.zeros(n)
+    
+    # Només volem els valors de la diagonal de la matriu de les diferències.
+    for i in range(0, n):
+        vector_diferencias[i] = mat_difdiv[i, i]
+        
+    return vector_diferencias
+
+def eval_pol_int_lagrange(x, dfdv, z):
+    """ Implementación del algoritmo de multiplicación encajada (Horner) para evaluar
+    el polinomio interpolador dados los nodos empleados, las diferencias divididas y 
+    los puntos de evaluación (punto, vector de puntos, o simbólica).
+    """
+    n = len(x)
+    
+    sol = dfdv[n-1]
+    
+    for i in np.arange(n-2, -1, -1):
+        sol = dfdv[i] + sol*(z-x[i])
+    
+    return sol
+
+def numint_lagrange(x, vf, z):
+    """ Metodo de interpolación de Lagrange donde recogemos el método de cálculo
+    de diferencias divididas y el método de evaluación del polinomio resultante.
+    """
+    
+    dfdv = diferencias_divididas_lagrange(x, vf)
+    
+    return eval_pol_int_lagrange(x, dfdv, z)
+
+
 ###############################
 # METODOS NUMERICOS PARA EDOs #
 ###############################
